@@ -1,0 +1,3 @@
+This is asyn write File fnThis is next line
+This is next line
+This is next line
