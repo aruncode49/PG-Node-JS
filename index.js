@@ -1,19 +1,32 @@
 // Creating a http server
 const http = require("http");
 const fs = require("fs");
+const url = require("url");
 
 // The callback function inside the createServer function is responsible for handling incoming request
 const myServer = http.createServer((req, res) => {
+  if (req.url === "/favicon.ico") return res.end();
   const log = `${Date.now()} : ${req.url} : New Request Recieved\n`;
+
+  const myUrl = url.parse(req.url, true);
+  console.log(myUrl);
+
   fs.appendFile("./log.txt", log, (err) => {
     // Non-blocking request -> appendFile
-    switch (req.url) {
+    switch (myUrl.pathname) {
       case "/":
         res.end("HomePage");
         break;
       case "/about":
         res.end("I'm Arun Kumar");
         break;
+      case "/search":
+        try {
+          const query = myUrl.query.search_query;
+          res.end("Here are your result for " + query);
+        } catch (err) {
+          console.log(err);
+        }
       default:
         res.end("404");
     }
